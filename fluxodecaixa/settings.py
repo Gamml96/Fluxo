@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-_8lm=(^iai-@+2$6kvvbif=67jx&v4e@qgec^s^m350ar57jx*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://fluxo-2ovh.onrender.com localhost']
 
 
 # Application definition
@@ -94,7 +94,7 @@ DATABASES = {
 
     }
 }
-
+# postgresql://fluxo_caixa_db_user:C6teoF70GpN3HgW2zVzOAwvYftXhOogk@dpg-ctspm15ds78s73chud90-a/fluxo_caixa_db
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
