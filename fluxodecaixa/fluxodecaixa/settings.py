@@ -76,13 +76,24 @@ WSGI_APPLICATION = 'fluxodecaixa.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgreesql_psycopg2',
+        'NAME': BASE_DIR / 'fluxo_caixa_db',
+        'USER': 'fluxo_caixa_db_user',
+        'PASSWORD': 'C6teoF70GpN3HgW2zVzOAwvYftXhOogk',	
+        'HOST': 'dpg-ctspm15ds78s73chud90-a.oregon-postgres.render.com',
+        'PORT': '5432',
+
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
