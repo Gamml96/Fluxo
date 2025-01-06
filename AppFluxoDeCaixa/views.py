@@ -28,8 +28,8 @@ def receitas(request):
         # Redirecionando ou renderizando novamente após salvar
         return redirect('receitas')  # Ou renderizar novamente se necessário
     
-    contas = Contas.objects.all()  # Pega todas as contas cadastradas
-    categorias = Categorias.objects.filter(tipo_categoria="Receita")  # Pega todas as categorias cadastradas
+    contas = Contas.objects.filter(usuario=request.user)  # Pega todas as contas cadastradas
+    categorias = Categorias.objects.filter(usuario=request.user,tipo_categoria="Receita")  # Pega todas as categorias cadastradas
     receitas = Receita.objects.filter(usuario=request.user)
 
     # Caso o método não seja POST, renderize a página normalmente
@@ -59,8 +59,8 @@ def despesas(request):
     
     # Filtrando as despesas para mostrar apenas do usuário autenticado
     despesas = Despesa.objects.filter(usuario=request.user)
-    contas = Contas.objects.all()  # Pega todas as contas cadastradas
-    categorias = Categorias.objects.filter(tipo_categoria="Despesa")  # Pega todas as categorias cadastradas
+    contas = Contas.objects.filter(usuario=request.user)  # Pega todas as contas cadastradas
+    categorias = Categorias.objects.filter(usuario=request.user,tipo_categoria="Despesa")  # Pega todas as categorias cadastradas
 
     return render(request, 'usuarios/despesas.html',{'despesas':despesas,
                                                      'contas':contas,
