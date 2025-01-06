@@ -123,7 +123,7 @@ def calcular_fluxo(request):
             data_final = timezone.datetime.strptime(data_final_str, "%d/%m/%Y").date()
 
             # Filtra as receitas e despesas dentro do intervalo de datas
-            receitas = Receita.objects.filter(usuario=request.user,data_vencimento__gte=data_inicial, data_vencimento__lte=data_final)
+            receitas = Receita.objects.filter(usuario=request.user,data__gte=data_inicial, data__lte=data_final)
             despesas = Despesa.objects.filter(usuario=request.user,data_vencimento__gte=data_inicial, data_vencimento__lte=data_final)
 
             contas = Contas.objects.filter(usuario=request.user)  # Pega todas as contas cadastradas
