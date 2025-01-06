@@ -68,6 +68,9 @@
       </nav>
 <div class="container">
     <h1>Lista de Despesas</h1>
+    <h3>Baixe o template para importar suas despesas:</h3>
+    <a href="{% url 'download_template_excel' %}" download="template_despesas.xlsx">Baixar Template Excel</a>
+
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="file">Importar Despesas:</label>
