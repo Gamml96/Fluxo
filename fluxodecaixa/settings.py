@@ -94,6 +94,8 @@ DATABASES = {
 
     }
 }
+
+DATABASES['default'] = dj_database_url.parse('postgresql://fluxo_caixa_db_user:C6teoF70GpN3HgW2zVzOAwvYftXhOogk@dpg-ctspm15ds78s73chud90-a/fluxo_caixa_db')
 # postgresql://fluxo_caixa_db_user:C6teoF70GpN3HgW2zVzOAwvYftXhOogk@dpg-ctspm15ds78s73chud90-a/fluxo_caixa_db
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
