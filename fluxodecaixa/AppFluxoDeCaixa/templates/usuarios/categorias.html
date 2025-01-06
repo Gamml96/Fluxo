@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+        <title>Fluxo de Caixa</title>
+    
+        <!-- Adicionando CSS do DataTables -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    
+        <!-- Incluindo o jQuery -->
+        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        
+        <!-- Incluindo o JS do DataTables -->
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    
+        <style>
+            .filters {
+                margin-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav style="background-color: aquamarine !important;" class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="{%url 'home'%}">Fluxo de Caixa</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                  <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="{%url 'home'%}">Home</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{%url 'receitas'%}">Receitas</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{%url 'despesas'%}">Despesas</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{%url 'contas'%}">Contas</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{%url 'categorias'%}">Categorias</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="{%url 'admin:index'%}">Configurações</a>
+                  </li>
+                </ul>
+                <ui class="navbar-nav ms-auto">
+                  <li class="nav-item">
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link nav-link">
+                            Logout
+                        </button>
+                    </form>
+                  </li>
+                </ui>
+              </div>
+            </div>
+          </nav>
+
+        <div class="container">
+            <h1>Lista de Categorias</h1>
+            <form action="{% url 'categorias' %}" method="post">
+                {% csrf_token %}
+                <div style="text-align: center;" class="container">
+                    <h2>Inlcuir Nova Categoria</h2>
+            
+                    <div class="form-group">
+                        <label for="categoria">Categoria</label>
+                        <input type="text" id="categoria" name="categoria" class="form-control" required>
+                    </div>
+            
+                    <div class="form-group">
+                        <label for="tipo_categoria">Tipo</label>
+                        <select name="tipo_categoria" id="tipo_categoria" class="form-control" required>
+                            <option value="Despesa">Despesa</option>
+                            <option value="Receita">Receita</option>
+                        </select>
+                    <h1> </h1>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        
+        
+            <table id="tabelaCategorias" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Selecionar</th>
+                        <th>Categoria</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {%if categorias%}
+                        {% for categoria in categorias %}
+                            <tr>
+                                <td><input type="checkbox" name="categorias_selecionadas" value="{{ categoria.id_categoria }}"></td> <!-- Checkbox para seleção -->
+                                <td>{{ categoria.categoria }}</td>
+                                <td>{{ categoria.tipo_categoria }}</td>
+
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5">Nenhuma categoria cadastrada.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div style="text-align: center;">
+                    <button type="submit" class="btn btn-danger" id="btnRemoverSelecionadas">Remover Selecionadas</button>
+                </div>
+                {%endif%}
+        </div>
+
+
+        <script>
+            $(document).ready(function() {
+                // Inicializando o DataTable
+                // Verifica se a tabela tem ao menos uma linha de dados
+                if ($('#tabelaDespesas tbody tr').length > 0) {
+                    $('#tabelaDespesas').DataTable();
+                }
+        // Evento de clique no botão de remover
+        $('#btnRemoverSelecionadas').click(function(e) {
+        e.preventDefault(); // Evita o envio imediato do formulário
+
+        // Cria um array para armazenar os IDs das categorias selecionadas
+        var categoriasSelecionadas = [];
+        
+        // Itera sobre todos os checkboxes marcados
+        $('input[name="categorias_selecionadas"]:checked').each(function() {
+            categoriasSelecionadas.push($(this).val()); // Adiciona o ID ao array
+        });
+
+        // Verifica se há pelo menos uma categoria selecionada
+        if (categoriasSelecionadas.length > 0) {
+            // Cria um formulário oculto para enviar os dados via POST
+            var form = $('<form>', {
+                method: 'POST',
+                action: '{% url "remover_categorias" %}'  // URL para remover as categorias
+            });
+
+            // Adiciona o token CSRF ao formulário
+            form.append($('<input>', {
+                type: 'hidden',
+                name: 'csrfmiddlewaretoken',
+                value: '{{ csrf_token }}'
+            }));
+
+            // Adiciona os IDs das categorias ao formulário
+            categoriasSelecionadas.forEach(function(id) {
+                form.append($('<input>', {
+                    type: 'hidden',
+                    name: 'categorias',
+                    value: id
+                }));
+            });
+
+            // Envia o formulário
+            form.appendTo('body').submit();
+        } else {
+            alert('Nenhuma categoria selecionada para remoção.');
+        }
+        });
+            });
+        </script>
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+    </body>
+</html>
