@@ -1,127 +1,191 @@
 <!doctype html>
-<html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ6H27zWJjwA2X8mA5g4Reg93q3aWjWv60n13zDxtZOJj2erX7t5fhV9iXn5" crossorigin="anonymous">
     
-        <title>Fluxo de Caixa</title>
-    
-        <!-- Adicionando CSS do DataTables -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    
-        <!-- Incluindo o jQuery -->
-        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        
-        <!-- Incluindo o JS do DataTables -->
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    
-        <style>
-            .filters {
-                margin-bottom: 20px;
-            }
-        </style>
-    </head>
-    <body>
-        <nav style="background-color: aquamarine !important;" class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-              <a class="navbar-brand" href="{%url 'home'%}">Fluxo de Caixa</a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarNav">
+    <title>Fluxo de Caixa - Despesas</title>
+
+    <!-- Adicionando CSS do DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .navbar a {
+            color: white !important;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .filters {
+            margin-bottom: 30px;
+        }
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .form-control, .btn {
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}">Fluxo de Caixa</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                  <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="{%url 'home'%}">Home</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="{%url 'receitas'%}">Receitas</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="{%url 'despesas'%}">Despesas</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="{%url 'contas'%}">Contas</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="{%url 'categorias'%}">Categorias</a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="{%url 'admin:index'%}">Configurações</a>
-                  </li>
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'receitas' %}">Receitas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'despesas' %}">Despesas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'contas' %}">Contas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'categorias' %}">Categorias</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Configurações</a></li>
                 </ul>
-                <ui class="navbar-nav ms-auto">
-                  <li class="nav-item">
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-link nav-link">
-                            Logout
-                        </button>
-                    </form>
-                  </li>
-                </ui>
-              </div>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-link nav-link">Logout</button>
+                        </form>
+                    </li>
+                </ul>
             </div>
-          </nav>
-
-        <div class="container">
-            <h1>Lista de Categorias</h1>
-            <form action="{% url 'categorias' %}" method="post">
-                {% csrf_token %}
-                <div style="text-align: center;" class="container">
-                    <h2>Inlcuir Nova Categoria</h2>
-            
-                    <div class="form-group">
-                        <label for="categoria">Categoria</label>
-                        <input type="text" id="categoria" name="categoria" class="form-control" required>
-                    </div>
-            
-                    <div class="form-group">
-                        <label for="tipo_categoria">Tipo</label>
-                        <select name="tipo_categoria" id="tipo_categoria" class="form-control" required>
-                            <option value="Despesa">Despesa</option>
-                            <option value="Receita">Receita</option>
-                        </select>
-                    <h1> </h1>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
-            </form>
-        
-        
-            <table id="tabelaCategorias" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Selecionar</th>
-                        <th>Categoria</th>
-                        <th>Tipo</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {%if categorias%}
-                        {% for categoria in categorias %}
-                            <tr>
-                                <td><input type="checkbox" name="categorias_selecionadas" value="{{ categoria.id_categoria }}"></td> <!-- Checkbox para seleção -->
-                                <td>{{ categoria.categoria }}</td>
-                                <td>{{ categoria.tipo_categoria }}</td>
-
-                            </tr>
-                        {% empty %}
-                            <tr>
-                                <td colspan="5">Nenhuma categoria cadastrada.</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <div style="text-align: center;">
-                    <button type="submit" class="btn btn-danger" id="btnRemoverSelecionadas">Remover Selecionadas</button>
-                </div>
-                {%endif%}
         </div>
+    </nav>
 
+    <div class="container">
+        <h1 class="my-4">Lista de Despesas</h1>
+        <p>Baixe o template para importar suas despesas:</p>
+        <a href="{% url 'download_template_excel' %}" class="btn btn-primary mb-4" download="template_despesas.xlsx">Baixar Template Excel</a>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="file" class="form-label">Importar Despesas:</label>
+                <input type="file" name="file" accept=".csv, .xlsx" class="form-control" />
+                <button type="submit" class="btn btn-success mt-3">Importar</button>
+            </div>
+        </form>
+
+        <form action="{% url 'despesas' %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <h2>Adicionar Nova Despesa</h2>
+                
+                <div class="form-group">
+                    <label for="data">Data</label>
+                    <input type="date" id="data" name="data" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="conta">Conta</label>
+                    <select name="conta" id="conta" class="form-control" required>
+                        {% for conta in contas %}
+                        <option value="{{ conta.conta }}" data-vencimento="{{ conta.data_vencimento }}" data-fechamento="{{ conta.data_fechamento }}">{{ conta.conta }}</option>
+                        {% empty %}
+                        <option value="">Nenhuma conta disponível</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo</label>
+                    <select name="tipo" id="tipo" class="form-control" required>
+                        <option value="Crédito">Crédito</option>
+                        <option value="Débito">Débito</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="vencimento">Vencimento</label>
+                    <input type="date" id="vencimento" name="vencimento" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="valor">Valor</label>
+                    <input type="number" id="valor" name="valor" step="0.01" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria">Categoria</label>
+                    <select name="categoria" id="categoria" class="form-control" required>
+                        {% for categoria in categorias %}
+                        <option value="{{ categoria.categoria }}">{{ categoria.categoria }}</option>
+                        {% empty %}
+                        <option value="">Nenhuma categoria disponível</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacao">Observação</label>
+                    <input type="text" id="observacao" name="observacao" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary mt-4">Salvar</button>
+            </div>
+        </form>
+
+        <h2 class="my-4">Despesas Cadastradas</h2>
+        <table id="tabelaDespesas" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Selecionar</th>
+                    <th>Data</th>
+                    <th>Conta</th>
+                    <th>Tipo</th>
+                    <th>Vencimento</th>
+                    <th>Valor</th>
+                    <th>Categoria</th>
+                    <th>Observação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if despesas %}
+                {% for despesa in despesas %}
+                <tr>
+                    <td><input type="checkbox" name="despesas_selecionadas" value="{{ despesa.id_despesa }}"></td>
+                    <td>{{ despesa.data|date:"d/m/Y" }}</td>
+                    <td>{{ despesa.conta }}</td>
+                    <td>{{ despesa.tipo }}</td>
+                    <td>{{ despesa.vencimento|date:"d/m/Y" }}</td>
+                    <td>{{ despesa.valor }}</td>
+                    <td>{{ despesa.categoria }}</td>
+                    <td>{{ despesa.observacao }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center">Nenhuma despesa cadastrada.</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-danger" id="btnRemoverSelecionadas">Remover Selecionadas</button>
+        </div>
+    </div>
 
         <script>
             $(document).ready(function() {

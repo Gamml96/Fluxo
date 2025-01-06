@@ -23,85 +23,105 @@
             .filters {
                 margin-bottom: 20px;
             }
+
+            .table-responsive {
+                margin-top: 20px;
+            }
+
+            .today-row {
+                background-color: #ffff99 !important; /* Amarelo claro */
+            }
+
+            .negative-balance {
+                color: red;
+            }
+
+            .positive-balance {
+                color: green;
+            }
         </style>
     </head>
     <body>
-      <nav style="background-color: aquamarine !important;" class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="{%url 'home'%}">Fluxo de Caixa</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{%url 'home'%}">Home</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{%url 'receitas'%}">Receitas</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{%url 'despesas'%}">Despesas</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{%url 'contas'%}">Contas</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{%url 'categorias'%}">Categorias</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="{%url 'admin:index'%}">Configurações</a>
-              </li>
-            </ul>
-            <ui class="navbar-nav ms-auto">
-              <li class="nav-item">
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-link nav-link">
-                        Logout
-                    </button>
-                </form>
-              </li>
-            </ui>
-          </div>
-        </div>
-      </nav>
-      <div style="text-align: center;" class="container">
-        <h2>Fluxo Diário</h2>
+        <nav style="background-color: aquamarine !important;" class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{%url 'home'%}">Fluxo de Caixa</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{%url 'home'%}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{%url 'receitas'%}">Receitas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{%url 'despesas'%}">Despesas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{%url 'contas'%}">Contas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{%url 'categorias'%}">Categorias</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{%url 'admin:index'%}">Configurações</a>
+                        </li>
+                    </ul>
+                    <ui class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ui>
+                </div>
+            </div>
+        </nav>
+
+        <div style="text-align: center;" class="container">
+            <h2>Fluxo Diário</h2>
 
             <form method="POST">
-              {% csrf_token %}
-              <label for="data_inicial">Data Inicial:</label>
-              <input type="text" name="data_inicial" value="{{ data_inicial|date:"d/m/Y" }}" >
-              
-              <label for="data_final">Data Final:</label>
-              <input type="text" name="data_final" value="{{ data_final|date:"d/m/Y" }}">
-              
-              <button type="submit">Calcular</button>
+                {% csrf_token %}
+                <label for="data_inicial">Data Inicial:</label>
+                <input type="text" name="data_inicial" value="{{ data_inicial|date:'d/m/Y' }}">
+                
+                <label for="data_final">Data Final:</label>
+                <input type="text" name="data_final" value="{{ data_final|date:'d/m/Y' }}">
+                
+                <button type="submit">Calcular</button>
             </form>
-            
-            <table id="tabelaFluxo" class="table table-striped">	    
-              <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Receitas</th>
-                  <th>Despesas</th>
-                  <th>Saldo</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in fluxo_diario %}
-                  <tr>
-                    <td class="data">{{ item.data|date:"d/m/Y" }}</td>
-                    <td>{{ item.total_receitas }}</td>
-                    <td>{{ item.total_despesas }}</td>
-                    <td class="saldo-acumulado">{{ item.saldo_acumulado }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          
+
+            <div class="table-responsive">
+                <table id="tabelaFluxo" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Receitas</th>
+                            <th>Despesas</th>
+                            <th>Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in fluxo_diario %}
+                            <tr class="{% if item.data|date:"d/m/Y" == hoje|date:"d/m/Y" %}today-row{% endif %}">
+                                <td class="data">{{ item.data|date:"d/m/Y" }}</td>
+                                <td>{{ item.total_receitas }}</td>
+                                <td>{{ item.total_despesas }}</td>
+                                <td class="saldo-acumulado {% if item.saldo_acumulado < 0 %}negative-balance{% elif item.saldo_acumulado > 0 %}positive-balance{% endif %}">
+                                    {{ item.saldo_acumulado }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     <!-- Adicionando JavaScript para estilizar a coluna "Saldo Acumulado" e destacar a linha de hoje -->
     <script>
         $(document).ready(function() {
