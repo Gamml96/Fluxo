@@ -68,6 +68,12 @@
       </nav>
 <div class="container">
     <h1>Lista de Despesas</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="file">Importar Despesas:</label>
+        <input type="file" name="file" accept=".csv, .xlsx" />
+        <button type="submit">Importar</button>
+    </form>
     <form action="{% url 'despesas' %}" method="post">
         {% csrf_token %}
         <div style="text-align: center;" class="container">

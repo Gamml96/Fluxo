@@ -4,6 +4,7 @@ from django.db.models import Sum
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+import pandas as pd
 
 # Create your views here.
 @login_required
@@ -40,31 +41,59 @@ def receitas(request):
 @login_required
 def despesas(request):
     if request.method == 'POST':
-        # Criando a nova despesa
-        nova_despesa = Despesa()
-        nova_despesa.data = request.POST.get('data')
-        nova_despesa.tipo = request.POST.get('tipo')
-        nova_despesa.conta = request.POST.get('conta')
-        nova_despesa.vencimento = request.POST.get('vencimento')
-        nova_despesa.valor = request.POST.get('valor')
-        nova_despesa.categoria = request.POST.get('categoria')
-        nova_despesa.observacao = request.POST.get('observacao')
-        nova_despesa.usuario = request.user  # Associando a despesa ao usuário autenticado
+        if request.FILES.get('file', None):  # Verifica se um arquivo foi enviado
+            file = request.FILES['file']
+            try:
+                # Verificando a extensão do arquivo
+                if file.name.endswith('.csv'):
+                    df = pd.read_csv(file)
+                elif file.name.endswith('.xlsx'):
+                    df = pd.read_excel(file)
+                else:
+                    return HttpResponse('Tipo de arquivo não suportado', status=400)
 
-        # Salvando no banco de dados
+                # Iterando sobre as linhas do DataFrame e criando as despesas
+                for _, row in df.iterrows():
+                    nova_despesa = Despesa(
+                        data=row['data'],
+                        tipo=row['tipo'],
+                        conta=row['conta'],
+                        vencimento=row['vencimento'],
+                        valor=row['valor'],
+                        categoria=row['categoria'],
+                        observacao=row['observacao'],
+                        usuario=request.user  # Associando a despesa ao usuário autenticado
+                    )
+                    nova_despesa.save()
+
+                return redirect('despesas')
+            except Exception as e:
+                return HttpResponse(f'Erro ao processar o arquivo: {str(e)}', status=400)
+
+        # Criando a nova despesa manualmente se não houver upload de arquivo
+        nova_despesa = Despesa(
+            data=request.POST.get('data'),
+            tipo=request.POST.get('tipo'),
+            conta=request.POST.get('conta'),
+            vencimento=request.POST.get('vencimento'),
+            valor=request.POST.get('valor'),
+            categoria=request.POST.get('categoria'),
+            observacao=request.POST.get('observacao'),
+            usuario=request.user  # Associando a despesa ao usuário autenticado
+        )
         nova_despesa.save()
 
-        # Redirecionando ou renderizando novamente após salvar
         return redirect('despesas')
-    
-    # Filtrando as despesas para mostrar apenas do usuário autenticado
-    despesas = Despesa.objects.filter(usuario=request.user)
-    contas = Contas.objects.filter(usuario=request.user)  # Pega todas as contas cadastradas
-    categorias = Categorias.objects.filter(usuario=request.user,tipo_categoria="Despesa")  # Pega todas as categorias cadastradas
 
-    return render(request, 'usuarios/despesas.html',{'despesas':despesas,
-                                                     'contas':contas,
-                                                     'categorias':categorias})
+    despesas = Despesa.objects.filter(usuario=request.user)
+    contas = Contas.objects.filter(usuario=request.user)
+    categorias = Categorias.objects.filter(usuario=request.user, tipo_categoria="Despesa")
+
+    return render(request, 'usuarios/despesas.html', {
+        'despesas': despesas,
+        'contas': contas,
+        'categorias': categorias
+    })
 
 @login_required
 def contas(request):
