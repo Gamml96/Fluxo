@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,7 @@ SECRET_KEY = 'django-insecure-_8lm=(^iai-@+2$6kvvbif=67jx&v4e@qgec^s^m350ar57jx*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://fluxo-2ovh.onrender.com localhost']
+ALLOWED_HOSTS = ['fluxo-2ovh.onrender.com localhost']
 
 
 # Application definition
