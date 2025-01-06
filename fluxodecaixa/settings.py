@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'fluxodecaixa.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgreesql_psycopg2',
-        'NAME': BASE_DIR / 'fluxo_caixa_db',
+        'NAME': 'fluxo_caixa_db',
         'USER': 'fluxo_caixa_db_user',
         'PASSWORD': 'C6teoF70GpN3HgW2zVzOAwvYftXhOogk',	
         'HOST': 'dpg-ctspm15ds78s73chud90-a.oregon-postgres.render.com',
