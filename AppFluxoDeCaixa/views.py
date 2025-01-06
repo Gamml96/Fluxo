@@ -136,7 +136,7 @@ def calcular_fluxo(request):
             for dia in (data_inicial + timezone.timedelta(days=i) for i in range((data_final - data_inicial).days + 1)):
                 # Recupera as somas para o dia
                 total_receitas = receitas.filter(data=dia).aggregate(Sum('valor'))['valor__sum'] or 0
-                total_despesas = despesas.filter(data=dia).aggregate(Sum('valor'))['valor__sum'] or 0
+                total_despesas = despesas.filter(vencimento=dia).aggregate(Sum('valor'))['valor__sum'] or 0
                 
                 # Atualiza o saldo acumulado
                 saldo_acumulado += total_receitas - total_despesas
