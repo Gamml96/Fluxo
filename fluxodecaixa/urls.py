@@ -33,4 +33,6 @@ urlpatterns = [
     path('remover_receitas/', views.remover_receitas, name='remover_receitas'),
     path('remover_contas/', views.remover_contas, name='remover_contas'),
     path('remover_categorias/', views.remover_categorias, name='remover_categorias'),
+    path('download-template/excel/', views.download_template_excel, name='download_template_excel'),
+
 ]

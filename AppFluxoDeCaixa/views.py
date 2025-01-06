@@ -265,3 +265,30 @@ def remover_categorias(request):
         return redirect('categorias')  # Redireciona para a página de categorias após remoção
     
     return HttpResponse(status=400)  # Caso o método não seja POST, retorna erro 400
+
+
+from openpyxl import Workbook
+from django.http import HttpResponse
+
+def download_template_excel(request):
+    # Cria uma nova planilha
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Template de Despesas"
+
+    # Define as colunas do template
+    colunas = ['data', 'tipo', 'conta', 'vencimento', 'valor', 'categoria', 'observacao']
+
+    # Adiciona as colunas ao cabeçalho da planilha
+    ws.append(colunas)
+
+    # Salva a planilha em memória
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename="template_despesas.xlsx"'
+
+    wb.save(response)
+
+    # Retorna o arquivo Excel como resposta para o download
+    return response
